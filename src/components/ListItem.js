@@ -5,17 +5,34 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 class ListItem extends Component {
+  renderDescription() {
+    const { item, selectedLibraryId } = this.props;
+
+    if (item.id === selectedLibraryId) {
+      return (
+        <Text>
+          {item.description}
+        </Text>
+      );
+    }
+  }
+
   render() {
 
     const { titleStyle } = styles;
-    const { id, title } = this.props.item
-    console.log(id);
+    const { id, title, description } = this.props.item
+
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.selectLibrary(id)}>
+      <TouchableWithoutFeedback
+        onPress={() => this.props.selectLibrary(id)}
+      >
         <View>
           <CardSection>
-            <Text>{this.props.item.title}</Text>
+            <Text style={styles.titleStyle}>
+              {title}
+            </Text>
           </CardSection>
+          {this.renderDescription()}
         </View>
       </TouchableWithoutFeedback>
     );
@@ -28,4 +45,8 @@ const styles = {
   }
 };
 
-export default connect(null, actions)(ListItem);
+mapStateToProps = state => {
+  return { selectedLibraryId: state.selectedLibraryId }
+};
+
+export default connect(mapStateToProps, actions)(ListItem);
